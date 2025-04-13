@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>OnePage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #111;
+      color: #eee;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .active {
+      display: block;
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      font-size: 1rem;
+      background-color: #222;
+      color: #eee;
+      border: 1px solid #555;
+      padding: 0.5rem;
+    }
+
+    button, a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #444;
+      color: #eee;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    button:hover, a:hover {
+      background-color: #666;
+    }
+
+    .header {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login View -->
+  <div id="view-login" class="view active">
+    <div class="header">
+      <h1>Welcome to OnePage</h1>
+      <p>A single public page for every user.</p>
+    </div>
+    <button onclick="fakeLogin()">Login (Dev)</button>
+  </div>
+
+  <!-- Editor View -->
+  <div id="view-editor" class="view">
+    <h2>Welcome, <span id="editor-username">you</span></h2>
+    <p>Your public page: <a id="editor-link" href="#">/u/you</a></p>
+    <textarea id="editor-text" placeholder="Write something about yourself..."></textarea><br>
+    <button onclick="savePage()">Save</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <!-- Viewer View -->
+  <div id="view-viewer" class="view">
+    <h2>Viewing <span id="viewer-username"></span>'s page</h2>
+    <div id="viewer-content" style="white-space: pre-wrap;"></div>
+    <br>
+    <a href="/" onclick="goHome(event)">← Back to Home</a>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
