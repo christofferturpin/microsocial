@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 10
+    MemorySize: 128
+
+Resources:
+
+  PagesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Pages
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      Tags:
+        - Key: Project
+          Value: MicroSocial
+
+  PostPageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: post_page/
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref PagesTable
+      Events:
+        EditPage:
+          Type: HttpApi
+          Properties:
+            Path: /edit
+            Method: POST
+            Auth:
+              Authorizer: NONE  # Replace with Cognito authorizer later
+
+  GetPageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get_page/
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref PagesTable
+      Events:
+        ViewPage:
+          Type: HttpApi
+          Properties:
+            Path: /u/{username}
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+  GetMyPageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get_my_page/
+      Handler: app.lambda_handler
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref PagesTable
+      Events:
+        ViewOwnPage:
+          Type: HttpApi
+          Properties:
+            Path: /me
+            Method: GET
+            Auth:
+              Authorizer: NONE  # Replace with Cognito later
+
+  MyApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Name: MicrosocialApi
+      CorsConfiguration:
+        AllowMethods:
+          - GET
+          - POST
+        AllowOrigins:
+          - '*'
