@@ -32,14 +32,16 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref PagesTable
+      Environment:
+        Variables:
+          PAGES_TABLE: !Ref PagesTable
       Events:
         EditPage:
           Type: HttpApi
           Properties:
             Path: /edit
             Method: POST
-            Auth:
-              Authorizer: NONE  # Replace with Cognito authorizer later
+            ApiId: !Ref MyApi
 
   GetPageFunction:
     Type: AWS::Serverless::Function
@@ -49,14 +51,16 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref PagesTable
+      Environment:
+        Variables:
+          PAGES_TABLE: !Ref PagesTable
       Events:
         ViewPage:
           Type: HttpApi
           Properties:
             Path: /u/{username}
             Method: GET
-            Auth:
-              Authorizer: NONE
+            ApiId: !Ref MyApi
 
   GetMyPageFunction:
     Type: AWS::Serverless::Function
@@ -66,14 +70,16 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref PagesTable
+      Environment:
+        Variables:
+          PAGES_TABLE: !Ref PagesTable
       Events:
         ViewOwnPage:
           Type: HttpApi
           Properties:
             Path: /me
             Method: GET
-            Auth:
-              Authorizer: NONE  # Replace with Cognito later
+            ApiId: !Ref MyApi
 
   MyApi:
     Type: AWS::Serverless::HttpApi
