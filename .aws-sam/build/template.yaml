@@ -1,6 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-
 Globals:
   Function:
     Runtime: python3.13
@@ -8,99 +7,105 @@ Globals:
     MemorySize: 128
     Environment:
       Variables:
-        PAGES_TABLE: !Ref PagesTable
-
+        PAGES_TABLE:
+          Ref: PagesTable
 Resources:
-
   PagesTable:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: Pages
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
-        - AttributeName: userId
-          AttributeType: S
+      - AttributeName: userId
+        AttributeType: S
       KeySchema:
-        - AttributeName: userId
-          KeyType: HASH
+      - AttributeName: userId
+        KeyType: HASH
       Tags:
-        - Key: Project
-          Value: MicroSocial
-
+      - Key: Project
+        Value: MicroSocial
   SiteBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "microsocial-site-${AWS::AccountId}"
+      BucketName:
+        Fn::Sub: microsocial-site-${AWS::AccountId}
       WebsiteConfiguration:
         IndexDocument: index.html
       Tags:
-        - Key: Project
-          Value: MicroSocial
-
+      - Key: Project
+        Value: MicroSocial
   PostPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: post_page/
+      CodeUri: PostPageFunction
       Handler: app.lambda_handler
       Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref PagesTable
+      - DynamoDBCrudPolicy:
+          TableName:
+            Ref: PagesTable
       Events:
         EditPagePost:
           Type: HttpApi
           Properties:
             Path: /edit
             Method: POST
-            ApiId: !Ref MyApi
+            ApiId:
+              Ref: MyApi
         EditPageOptions:
           Type: HttpApi
           Properties:
             Path: /edit
             Method: OPTIONS
-            ApiId: !Ref MyApi
-
+            ApiId:
+              Ref: MyApi
+    Metadata:
+      SamResourceId: PostPageFunction
   GetPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: get_page/
+      CodeUri: GetPageFunction
       Handler: app.lambda_handler
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref PagesTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: PagesTable
       Events:
         ViewPage:
           Type: HttpApi
           Properties:
             Path: /u/{username}
             Method: GET
-            ApiId: !Ref MyApi
-
+            ApiId:
+              Ref: MyApi
+    Metadata:
+      SamResourceId: GetPageFunction
   GetMyPageFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: get_my_page/
+      CodeUri: GetMyPageFunction
       Handler: app.lambda_handler
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref PagesTable
+      - DynamoDBReadPolicy:
+          TableName:
+            Ref: PagesTable
       Events:
         ViewOwnPage:
           Type: HttpApi
           Properties:
             Path: /me
             Method: GET
-            ApiId: !Ref MyApi
-
+            ApiId:
+              Ref: MyApi
+    Metadata:
+      SamResourceId: GetMyPageFunction
   MyApi:
     Type: AWS::Serverless::HttpApi
     Properties:
       Name: MicrosocialApi
       CorsConfiguration:
         AllowMethods:
-          - GET
-          - POST
-          - OPTIONS
-        AllowHeaders:
-          - Content-Type
+        - GET
+        - POST
+        - OPTIONS
         AllowOrigins:
-          - '*'
+        - '*'
