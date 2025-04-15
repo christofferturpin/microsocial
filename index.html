@@ -68,9 +68,22 @@
     <h2>Welcome, <span id="editor-username">you</span></h2>
     <p>Your public page: <a id="editor-link" href="#">/u/you</a></p>
     <textarea id="editor-text" placeholder="Write something about yourself..."></textarea><br>
+    <div id="webring-container">
+      <p>Web ring links (usernames):</p>
+      <input type="text" class="webring-input" placeholder="Link 1" />
+      <input type="text" class="webring-input" placeholder="Link 2" />
+      <input type="text" class="webring-input" placeholder="Link 3" />
+      <input type="text" class="webring-input" placeholder="Link 4" />
+      <input type="text" class="webring-input" placeholder="Link 5" />
+    </div>
     <button onclick="savePage()">Save</button>
     <button onclick="logout()">Logout</button>
   </div>
+
+  <div class="footer">
+    <p><a href="https//www.christofferturpin.com">Chris Turpin</a>.</p>
+    <p>Want your own? Get the SAM Template/Files at <a href="https://github.com/christofferturpin">My Github</a>.</p>
+  </div>  
 
   <script src="app.js"></script>
 </body>

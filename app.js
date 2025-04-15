@@ -37,13 +37,18 @@ function getAuthHeaders() {
 
 function savePage() {
   const content = document.getElementById("editor-text").value;
+  const links = Array.from(document.querySelectorAll(".webring-input"))
+    .map(input => input.value.trim())
+    .filter(link => link.length > 0)
+    .slice(0, 5);
+
   fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/edit", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       ...getAuthHeaders()
     },
-    body: JSON.stringify({ content })
+    body: JSON.stringify({ content, links })
   })
     .then(res => res.json())
     .then(data => alert("Saved to cloud!"))
@@ -52,6 +57,7 @@ function savePage() {
       alert("Failed to save.");
     });
 }
+
 
 function loadEditor() {
   // Decode JWT to extract the username
@@ -75,13 +81,25 @@ function loadEditor() {
       return res.json();
     })
     .then(data => {
+      // Set page content
       document.getElementById("editor-text").value = data.content || "";
+
+      // DEBUG
+      console.log("DATA FROM /me:", data);
+
+      // Set webring links
+      const linkInputs = document.querySelectorAll(".webring-input");
+      const links = data.links || [];
+
+      linkInputs.forEach((input, index) => {
+        input.value = links[index] || "";
+      });
     })
     .catch(err => {
+      console.error("Error loading editor:", err);
       document.getElementById("editor-text").value = "";
     });
 }
-
 
 
 
