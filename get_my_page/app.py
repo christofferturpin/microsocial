@@ -3,50 +3,30 @@ import boto3
 import os
 from botocore.exceptions import ClientError
 
-CORS_HEADERS = {
-    "Access-Control-Allow-Origin": "*",  # Replace with your domain in prod
-    "Access-Control-Allow-Methods": "GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization"
-}
-
 dynamodb = boto3.resource('dynamodb')
 table = dynamodb.Table(os.environ['PAGES_TABLE'])
 
 def lambda_handler(event, context):
-    method = event.get("requestContext", {}).get("http", {}).get("method", "")
-
-    if method == "OPTIONS":
-        return {
-            "statusCode": 204,
-            "headers": CORS_HEADERS
-        }
-
     try:
-        claims = event.get("requestContext", {}).get("authorizer", {}).get("jwt", {}).get("claims", {})
-        print("JWT Claims:", json.dumps(claims))
+        username = event['pathParameters'].get('username')
 
-        user_id = claims.get("username")
-
-
-        if not user_id:
+        if not username:
             return {
-                "statusCode": 403,
-                "headers": CORS_HEADERS,
-                "body": json.dumps({"error": "Unauthorized"})
+                "statusCode": 400,
+                "body": json.dumps({"error": "Missing username in path"})
             }
 
-        response = table.get_item(Key={'userId': user_id})
+        # Look up by userId (we're treating username = userId for now)
+        response = table.get_item(Key={'userId': username})
 
         if 'Item' not in response:
             return {
                 "statusCode": 404,
-                "headers": CORS_HEADERS,
-                "body": json.dumps({"error": "Your page was not found."})
+                "body": json.dumps({"error": "User page not found"})
             }
 
         return {
             "statusCode": 200,
-            "headers": CORS_HEADERS,
             "body": json.dumps({
                 "userId": response['Item']['userId'],
                 "content": response['Item']['content'],
@@ -58,13 +38,11 @@ def lambda_handler(event, context):
         print("DynamoDB error:", e)
         return {
             "statusCode": 500,
-            "headers": CORS_HEADERS,
-            "body": json.dumps({"error": "Server error retrieving your page."})
+            "body": json.dumps({"error": "Server error retrieving page."})
         }
     except Exception as e:
         print("Unexpected error:", e)
         return {
             "statusCode": 500,
-            "headers": CORS_HEADERS,
             "body": json.dumps({"error": "Unexpected server error."})
         }
