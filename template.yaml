@@ -45,6 +45,8 @@ Resources:
       Policies:
         - DynamoDBCrudPolicy:
             TableName: !Ref PagesTable
+        - S3CrudPolicy:
+            BucketName: !Sub "microsocial-site-${AWS::AccountId}"
       Events:
         EditPagePost:
           Type: HttpApi
@@ -52,6 +54,8 @@ Resources:
             Path: /edit
             Method: POST
             ApiId: !Ref MyApi
+            Auth:
+              Authorizer: MicroSocialJWTAuthorizer
         EditPageOptions:
           Type: HttpApi
           Properties:
@@ -90,6 +94,14 @@ Resources:
             Path: /me
             Method: GET
             ApiId: !Ref MyApi
+            Auth:
+              Authorizer: MicroSocialJWTAuthorizer
+        ViewOwnPageOptions:
+          Type: HttpApi
+          Properties:
+            Path: /me
+            Method: OPTIONS
+            ApiId: !Ref MyApi
 
   MyApi:
     Type: AWS::Serverless::HttpApi
@@ -100,7 +112,17 @@ Resources:
           - GET
           - POST
           - OPTIONS
-        AllowHeaders:
-          - Content-Type
         AllowOrigins:
-          - '*'
+          - 'https://microsocial.link'
+          - 'https://www.microsocial.link'
+        AllowHeaders:
+          - 'Content-Type'
+          - 'Authorization'
+      Auth:
+        Authorizers:
+          MicroSocialJWTAuthorizer:
+            JwtConfiguration:
+              Issuer: "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_ZYOUDayBZ"
+              Audience:
+                - "2mmm9c445j7q675u4ufur7099n"
+            IdentitySource: "$request.header.Authorization"

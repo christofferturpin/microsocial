@@ -1,35 +1,52 @@
+const clientId = "2mmm9c445j7q675u4ufur7099n";
+const domain = "us-east-1zyoudaybz.auth.us-east-1.amazoncognito.com";
+const redirectUri = window.location.origin;
+const loginUrl = `https://${domain}/login?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}`;
+const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${redirectUri}`;
+
 function isLoggedIn() {
-  return !!localStorage.getItem("username");
+  return !!localStorage.getItem("access_token");
 }
 
-function fakeLogin() {
-  const username = prompt("Enter your username:");
-  if (!username) return;
-  localStorage.setItem("username", username);
-  history.pushState({}, "", "/me");
-  route();
+function login() {
+  window.location.href = loginUrl;
 }
 
 function logout() {
-  localStorage.removeItem("username");
+  localStorage.removeItem("access_token");
   history.pushState({}, "", "/");
   route();
 }
 
+function parseTokenFromUrl() {
+  const hash = window.location.hash;
+  if (hash.includes("access_token")) {
+    const params = new URLSearchParams(hash.substring(1));
+    const token = params.get("access_token");
+    if (token) {
+      localStorage.setItem("access_token", token);
+      history.replaceState(null, "", "/me");
+    }
+  }
+}
+
+function getAuthHeaders() {
+  const token = localStorage.getItem("access_token");
+  return token ? { "Authorization": `Bearer ${token}` } : {};
+}
+
 function savePage() {
   const content = document.getElementById("editor-text").value;
-
   fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/edit", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      ...getAuthHeaders()
     },
     body: JSON.stringify({ content })
   })
     .then(res => res.json())
-    .then(data => {
-      alert("Saved to cloud!");
-    })
+    .then(data => alert("Saved to cloud!"))
     .catch(err => {
       console.error("Error saving:", err);
       alert("Failed to save.");
@@ -37,12 +54,13 @@ function savePage() {
 }
 
 function loadEditor() {
-  const username = localStorage.getItem("username");
-  document.getElementById("editor-username").textContent = username;
-  document.getElementById("editor-link").href = `/u/${username}`;
-  document.getElementById("editor-link").textContent = `/u/${username}`;
+  document.getElementById("editor-username").textContent = "you";
+  document.getElementById("editor-link").href = `/u/you`;
+  document.getElementById("editor-link").textContent = `/u/you`;
 
-  fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/me")
+  fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/me", {
+    headers: getAuthHeaders()
+  })
     .then(res => {
       if (!res.ok) throw new Error("Not found");
       return res.json();
@@ -92,13 +110,14 @@ function route() {
   }
 }
 
-// Home navigation override
 function goHome(e) {
   e.preventDefault();
   history.pushState({}, "", "/");
   route();
 }
 
-// Handle browser nav
 window.onpopstate = route;
-window.onload = route;
+window.onload = () => {
+  parseTokenFromUrl();
+  route();
+};
