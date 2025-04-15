@@ -47,6 +47,10 @@ Resources:
             TableName: !Ref PagesTable
         - S3CrudPolicy:
             BucketName: !Sub "microsocial-site-${AWS::AccountId}"
+        - Statement:
+            - Effect: Allow
+              Action: cloudfront:CreateInvalidation
+              Resource: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/E2IPL84OKE5F39
       Events:
         EditPagePost:
           Type: HttpApi
@@ -62,6 +66,7 @@ Resources:
             Path: /edit
             Method: OPTIONS
             ApiId: !Ref MyApi
+
 
   GetPageFunction:
     Type: AWS::Serverless::Function

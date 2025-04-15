@@ -58,9 +58,8 @@
   <div id="view-login" class="view active">
     <div class="header">
       <h1>Welcome to MicroSocial</h1>
-      <p>A single public page for every user.</p>
+      <p>In a world of fake images and endless scrolling, MicroSocial says screw that. Text only. 1000 words. No noise, no fluff. Just you and your thoughts, your story, your manifesto, whatever.</p>
     </div>
-    <button onclick="fakeLogin()">Login (Dev)</button>
     <button onclick="login()">Login</button>
   </div>
 
@@ -71,14 +70,6 @@
     <textarea id="editor-text" placeholder="Write something about yourself..."></textarea><br>
     <button onclick="savePage()">Save</button>
     <button onclick="logout()">Logout</button>
-  </div>
-
-  <!-- Viewer View -->
-  <div id="view-viewer" class="view">
-    <h2>Viewing <span id="viewer-username"></span>'s page</h2>
-    <div id="viewer-content" style="white-space: pre-wrap;"></div>
-    <br>
-    <a href="/" onclick="goHome(event)">← Back to Home</a>
   </div>
 
   <script src="app.js"></script>

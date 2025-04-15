@@ -54,9 +54,18 @@ function savePage() {
 }
 
 function loadEditor() {
-  document.getElementById("editor-username").textContent = "you";
-  document.getElementById("editor-link").href = `/u/you`;
-  document.getElementById("editor-link").textContent = `/u/you`;
+  // Decode JWT to extract the username
+  const token = localStorage.getItem("access_token");
+  let username = "you";
+
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    username = payload["username"] || payload["cognito:username"] || "you";
+  }
+
+  document.getElementById("editor-username").textContent = username;
+  document.getElementById("editor-link").href = `/u/${username}.html`;
+  document.getElementById("editor-link").textContent = `/u/${username}.html`;
 
   fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/me", {
     headers: getAuthHeaders()
@@ -73,22 +82,8 @@ function loadEditor() {
     });
 }
 
-function loadViewer(username) {
-  document.getElementById("viewer-username").textContent = username;
-  const contentBox = document.getElementById("viewer-content");
 
-  fetch(`https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/u/${username}`)
-    .then(res => {
-      if (!res.ok) throw new Error("Not found");
-      return res.json();
-    })
-    .then(data => {
-      contentBox.textContent = data.content || "(This page is blank.)";
-    })
-    .catch(err => {
-      contentBox.textContent = "User doesn't exist.";
-    });
-}
+
 
 function showView(viewName) {
   document.querySelectorAll(".view").forEach(el => el.classList.remove("active"));
@@ -115,6 +110,20 @@ function goHome(e) {
   history.pushState({}, "", "/");
   route();
 }
+
+function getUsernameFromToken() {
+  const token = localStorage.getItem("access_token");
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.username || payload["cognito:username"] || null;
+  } catch (err) {
+    console.error("Failed to parse JWT:", err);
+    return null;
+  }
+}
+
 
 window.onpopstate = route;
 window.onload = () => {

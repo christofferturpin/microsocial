@@ -5,25 +5,31 @@ from datetime import datetime
 from botocore.exceptions import ClientError
 
 print("Loading function...")
-
-CORS_HEADERS = {
-    "Access-Control-Allow-Origin": "*",  # Replace with your domain in prod
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization"
-}
+print("most recent version of lambda")
 
 s3 = boto3.client('s3')
 dynamodb = boto3.resource('dynamodb')
 
+def build_cors_headers(origin):
+    allowed_origins = ["https://microsocial.link", "https://www.microsocial.link"]
+    return {
+        "Access-Control-Allow-Origin": origin if origin in allowed_origins else "https://microsocial.link",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    }
+
 def lambda_handler(event, context):
     method = event.get("requestContext", {}).get("http", {}).get("method", "")
+    origin = event.get("headers", {}).get("origin", "")
+    cors_headers = build_cors_headers(origin)
+
     print("HTTP Method:", method)
     print("Received event:", json.dumps(event))
 
     if method == "OPTIONS":
         return {
             "statusCode": 204,
-            "headers": CORS_HEADERS
+            "headers": cors_headers
         }
 
     try:
@@ -32,7 +38,7 @@ def lambda_handler(event, context):
         if not user_id:
             return {
                 "statusCode": 403,
-                "headers": CORS_HEADERS,
+                "headers": cors_headers,
                 "body": json.dumps({"error": "Unauthorized"})
             }
 
@@ -46,7 +52,7 @@ def lambda_handler(event, context):
         if not content:
             return {
                 "statusCode": 400,
-                "headers": CORS_HEADERS,
+                "headers": cors_headers,
                 "body": json.dumps({"error": "Missing or empty 'content'"})
             }
 
@@ -83,14 +89,13 @@ def lambda_handler(event, context):
             Key=f"u/{user_id}.html",
             Body=html,
             ContentType="text/html",
-            ACL="public-read"  # Optional: skip if you're using CloudFront OAC
         )
 
         print(f"Uploaded static page for {user_id} to S3.")
 
         return {
             "statusCode": 200,
-            "headers": CORS_HEADERS,
+            "headers": cors_headers,
             "body": json.dumps({"message": "Page saved and published!"})
         }
 
@@ -98,13 +103,13 @@ def lambda_handler(event, context):
         print("AWS error:", e)
         return {
             "statusCode": 500,
-            "headers": CORS_HEADERS,
+            "headers": cors_headers,
             "body": json.dumps({"error": "AWS service error."})
         }
     except Exception as e:
         print("Unexpected error:", e)
         return {
             "statusCode": 500,
-            "headers": CORS_HEADERS,
+            "headers": cors_headers,
             "body": json.dumps({"error": "Unexpected server error."})
         }
