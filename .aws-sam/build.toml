@@ -9,15 +9,6 @@ manifest_hash = ""
 packagetype = "Zip"
 functions = ["PostPageFunction"]
 
-[function_build_definitions.5be52b00-e01d-4265-8a99-6e57471513ef]
-codeuri = "C:\\Users\\cjturpin\\Desktop\\microsocial\\get_page"
-runtime = "python3.13"
-architecture = "x86_64"
-handler = "app.lambda_handler"
-manifest_hash = ""
-packagetype = "Zip"
-functions = ["GetPageFunction"]
-
 [function_build_definitions.ac5ceb23-4cfb-4df9-92be-a80bf15c4c4b]
 codeuri = "C:\\Users\\cjturpin\\Desktop\\microsocial\\get_my_page"
 runtime = "python3.13"
@@ -26,5 +17,14 @@ handler = "app.lambda_handler"
 manifest_hash = ""
 packagetype = "Zip"
 functions = ["GetMyPageFunction"]
+
+[function_build_definitions.0f0fde45-2c51-4712-8f37-ccb946dc08c3]
+codeuri = "C:\\Users\\cjturpin\\Desktop\\microsocial\\get_random_pages"
+runtime = "python3.13"
+architecture = "x86_64"
+handler = "app.lambda_handler"
+manifest_hash = ""
+packagetype = "Zip"
+functions = ["GetRandomPagesFunction"]
 
 [layer_build_definitions]

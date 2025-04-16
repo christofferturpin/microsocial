@@ -67,23 +67,6 @@ Resources:
             Method: OPTIONS
             ApiId: !Ref MyApi
 
-
-  GetPageFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: get_page/
-      Handler: app.lambda_handler
-      Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref PagesTable
-      Events:
-        ViewPage:
-          Type: HttpApi
-          Properties:
-            Path: /u/{username}
-            Method: GET
-            ApiId: !Ref MyApi
-
   GetMyPageFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -106,6 +89,27 @@ Resources:
           Properties:
             Path: /me
             Method: OPTIONS
+            ApiId: !Ref MyApi
+
+
+  GetRandomPagesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: get_random_pages/
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          SITE_BUCKET: !Ref SiteBucket
+      Policies:
+        - S3ReadPolicy:
+            BucketName: !Ref SiteBucket
+      Events:
+        GetRandomPages:
+          Type: HttpApi
+          Properties:
+            Path: /random
+            Method: GET
             ApiId: !Ref MyApi
 
   MyApi:

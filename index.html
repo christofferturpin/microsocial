@@ -2,55 +2,116 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>OnePage</title>
+  <title>MicroSocial</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: sans-serif;
-      background-color: #111;
-      color: #eee;
+      font-family: 'Courier New', monospace;
+      background-color: #000033;
+      color: #00FF99;
       margin: 0;
       padding: 2rem;
+      background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+      background-repeat: repeat;
     }
-
+  
     .view {
       display: none;
     }
-
+  
     .active {
       display: block;
     }
-
+  
+    h1, h2, h3 {
+      color: #FFD700;
+      text-shadow: 1px 1px 0 #FF00FF;
+    }
+  
     textarea {
       width: 100%;
       height: 200px;
-      font-family: monospace;
+      font-family: 'Courier New', monospace;
       font-size: 1rem;
-      background-color: #222;
-      color: #eee;
-      border: 1px solid #555;
+      background-color: #111;
+      color: #00FF99;
+      border: 2px dashed #00FFFF;
       padding: 0.5rem;
+      box-shadow: 0 0 10px #00FFFF;
     }
-
-    button, a {
+  
+    button {
       display: inline-block;
       margin-top: 1rem;
       padding: 0.5rem 1rem;
-      background-color: #444;
-      color: #eee;
-      border: none;
+      background-color: #FF00FF;
+      color: #000;
+      font-weight: bold;
+      border: 2px solid #00FFFF;
       cursor: pointer;
-      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-
+  
     button:hover, a:hover {
-      background-color: #666;
+      background-color: #00FFFF;
+      color: #000;
+      border-color: #FF00FF;
     }
-
+  
+    a {
+      color: #00FFFF;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  
     .header {
       margin-bottom: 2rem;
+      border: 2px solid #FF00FF;
+      padding: 1rem;
+      background-color: #111111cc;
+    }
+
+    #discover-list {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 2px dashed #FF00FF;
+      background-color: #111111cc;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    
+    #discover-list a {
+      display: inline-block;
+      padding: 0.4rem 0.7rem;
+      border: 1px dashed #FFD700;
+      background-color: #222;
+      color: #00FFFF;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    #discover-list a:hover {
+      background-color: #FF00FF;
+      color: #000;
+      border-color: #00FFFF;
+    }
+    
+  
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.8rem;
+      text-align: center;
+      color: #ccc;
+    }
+  
+    .footer a {
+      color: #FF00FF;
     }
   </style>
+  
 </head>
 <body>
 
@@ -58,7 +119,7 @@
   <div id="view-login" class="view active">
     <div class="header">
       <h1>Welcome to MicroSocial</h1>
-      <p>In a world of fake images and endless scrolling, MicroSocial says screw that. Text only. 1000 words. No noise, no fluff. Just you and your thoughts, your story, your manifesto, whatever.</p>
+      <p>MicroSocial is a rebellion against the algorithm. No likes, no feeds, no scroll-jacking ads for memecoins. Just one page, yours. Write your essay. Post bad poetry. Add a cursed gif. Build your webring. It's GeoCities meets MySpace, resurrected from the dead with serverless cloud wizardry for the modern misfit.</p>
     </div>
     <button onclick="login()">Login</button>
   </div>
@@ -66,22 +127,34 @@
   <!-- Editor View -->
   <div id="view-editor" class="view">
     <h2>Welcome, <span id="editor-username">you</span></h2>
-    <p>Your public page: <a id="editor-link" href="#">/u/you</a></p>
-    <textarea id="editor-text" placeholder="Write something about yourself..."></textarea><br>
+    <p>Your public page (most visual HTML & CSS tags avaliable). Your site here: <a id="editor-link" href="#">/u/you</a></p>
+    <textarea id="editor-text" placeholder="Write something about yourself... (or wait a second while your content loads)."></textarea><br>
     <div id="webring-container">
-      <p>Web ring links (usernames):</p>
-      <input type="text" class="webring-input" placeholder="Link 1" />
-      <input type="text" class="webring-input" placeholder="Link 2" />
-      <input type="text" class="webring-input" placeholder="Link 3" />
-      <input type="text" class="webring-input" placeholder="Link 4" />
-      <input type="text" class="webring-input" placeholder="Link 5" />
+      <p>Webring links (usernames):</p>
+      
+      u/<input type="text" class="webring-input" placeholder="username" />.html
+      u/<input type="text" class="webring-input" placeholder="username" />.html
+      u/<input type="text" class="webring-input" placeholder="username" />.html
+      u/<input type="text" class="webring-input" placeholder="username" />.html
+      u/<input type="text" class="webring-input" placeholder="username" />.html
     </div>
+    
     <button onclick="savePage()">Save</button>
     <button onclick="logout()">Logout</button>
   </div>
 
+
+
+
+
+  <hr>
+  <h3>Check out these pages:</h3>
+  <div id="discover-list"></div>
+
+
+
   <div class="footer">
-    <p><a href="https//www.christofferturpin.com">Chris Turpin</a>.</p>
+    <p>By <a href="https://www.christofferturpin.com">Chris Turpin</a>.</p>
     <p>Want your own? Get the SAM Template/Files at <a href="https://github.com/christofferturpin">My Github</a>.</p>
   </div>  
 

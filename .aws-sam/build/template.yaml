@@ -46,6 +46,11 @@ Resources:
       - S3CrudPolicy:
           BucketName:
             Fn::Sub: microsocial-site-${AWS::AccountId}
+      - Statement:
+        - Effect: Allow
+          Action: cloudfront:CreateInvalidation
+          Resource:
+            Fn::Sub: arn:aws:cloudfront::${AWS::AccountId}:distribution/E2IPL84OKE5F39
       Events:
         EditPagePost:
           Type: HttpApi
@@ -65,25 +70,6 @@ Resources:
               Ref: MyApi
     Metadata:
       SamResourceId: PostPageFunction
-  GetPageFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: GetPageFunction
-      Handler: app.lambda_handler
-      Policies:
-      - DynamoDBReadPolicy:
-          TableName:
-            Ref: PagesTable
-      Events:
-        ViewPage:
-          Type: HttpApi
-          Properties:
-            Path: /u/{username}
-            Method: GET
-            ApiId:
-              Ref: MyApi
-    Metadata:
-      SamResourceId: GetPageFunction
   GetMyPageFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -112,6 +98,30 @@ Resources:
               Ref: MyApi
     Metadata:
       SamResourceId: GetMyPageFunction
+  GetRandomPagesFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetRandomPagesFunction
+      Handler: app.lambda_handler
+      Runtime: python3.13
+      Environment:
+        Variables:
+          SITE_BUCKET:
+            Ref: SiteBucket
+      Policies:
+      - S3ReadPolicy:
+          BucketName:
+            Ref: SiteBucket
+      Events:
+        GetRandomPages:
+          Type: HttpApi
+          Properties:
+            Path: /random
+            Method: GET
+            ApiId:
+              Ref: MyApi
+    Metadata:
+      SamResourceId: GetRandomPagesFunction
   MyApi:
     Type: AWS::Serverless::HttpApi
     Properties:

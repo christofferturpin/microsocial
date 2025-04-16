@@ -51,7 +51,7 @@ function savePage() {
     body: JSON.stringify({ content, links })
   })
     .then(res => res.json())
-    .then(data => alert("Saved to cloud!"))
+    .then(data => alert("Saved! it may take up 10 seconds for your page to change."))
     .catch(err => {
       console.error("Error saving:", err);
       alert("Failed to save.");
@@ -142,9 +142,46 @@ function getUsernameFromToken() {
   }
 }
 
+function loadDiscoverSection() {
+  console.log("Calling /random to load discover section...");
+  fetch("https://127f9tw3s0.execute-api.us-east-1.amazonaws.com/random")
+    .then(res => {
+      console.log("Response status:", res.status);
+      return res.json();
+    })
+    .then(links => {
+      console.log("Discover links received:", links);
+      const container = document.getElementById("discover-list");
+      container.innerHTML = ""; // Clear previous
+
+      links.forEach(link => {
+        // Extract username from full URL (assumes /u/username.html)
+        const parts = link.split("/");
+        const filename = parts[parts.length - 1];
+        const username = filename.replace(".html", "");
+
+        console.log("Adding link to DOM:", username);
+
+        const a = document.createElement("a");
+        a.href = `https://www.microsocial.link/u/${username}.html`;
+        a.textContent = username;
+        a.target = "_blank";
+        container.appendChild(a);
+        container.appendChild(document.createElement("br"));
+      });
+    })
+    .catch(err => {
+      console.error("Error loading discover section:", err);
+    });
+}
+
+
+
+
 
 window.onpopstate = route;
 window.onload = () => {
   parseTokenFromUrl();
   route();
+  loadDiscoverSection();
 };

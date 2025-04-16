@@ -27,7 +27,6 @@ def lambda_handler(event, context):
 
         user_id = claims.get("username")
 
-
         if not user_id:
             return {
                 "statusCode": 403,
@@ -44,13 +43,16 @@ def lambda_handler(event, context):
                 "body": json.dumps({"error": "Your page was not found."})
             }
 
+        item = response['Item']
+
         return {
             "statusCode": 200,
             "headers": CORS_HEADERS,
             "body": json.dumps({
-                "userId": response['Item']['userId'],
-                "content": response['Item']['content'],
-                "lastUpdated": response['Item']['lastUpdated']
+                "userId": item['userId'],
+                "content": item.get('content', ''),
+                "lastUpdated": item.get('lastUpdated', ''),
+                "links": item.get('webring', [])
             })
         }
 
