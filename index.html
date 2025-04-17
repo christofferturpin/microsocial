@@ -110,6 +110,42 @@
     .footer a {
       color: #FF00FF;
     }
+
+
+    .blink {
+      display: inline-block;
+      animation: slowFallBounce 3s ease-in-out infinite;
+      color: #FFD700;
+      text-shadow: 0 0 5px #FF00FF, 0 0 10px #FF00FF;
+      transform-origin: left bottom;
+    }
+    
+    @keyframes slowFallBounce {
+      0% {
+        transform: rotate(0deg) translateY(0);
+        opacity: 1;
+      }
+      60% {
+        transform: rotate(15deg) translateY(10px);
+        opacity: 0.9;
+      }
+      70% {
+        transform: rotate(-10deg) translateY(-5px);
+        opacity: 1;
+      }
+      80% {
+        transform: rotate(5deg) translateY(2px);
+      }
+      90% {
+        transform: rotate(-2deg) translateY(1px);
+      }
+      100% {
+        transform: rotate(0deg) translateY(0);
+      }
+    }
+    
+    
+    
   </style>
   
 </head>
@@ -118,7 +154,7 @@
   <!-- Login View -->
   <div id="view-login" class="view active">
     <div class="header">
-      <h1>Welcome to MicroSocial</h1>
+      <h1>Welcome to Micro<span class="blink">Social</span></h1>
       <p>MicroSocial is a rebellion against the algorithm. No likes, no feeds, no scroll-jacking ads for memecoins. Just one page, yours. Write your essay. Post bad poetry. Add a cursed gif. Build your webring. It's GeoCities meets MySpace, resurrected from the dead with serverless cloud wizardry for the modern misfit.</p>
     </div>
     <button onclick="login()">Login</button>
@@ -129,6 +165,9 @@
     <h2>Welcome, <span id="editor-username">you</span></h2>
     <p>Your public page (most visual HTML & CSS tags avaliable). Your site here: <a id="editor-link" href="#">/u/you</a></p>
     <textarea id="editor-text" placeholder="Write something about yourself... (or wait a second while your content loads)."></textarea><br>
+    <div>
+      <a href="https://www.microsocial.link/howto.html">Editor tips and tricks.</a>
+    </div>
     <div id="webring-container">
       <p>Webring links (usernames):</p>
       
@@ -142,6 +181,7 @@
     <button onclick="savePage()">Save</button>
     <button onclick="logout()">Logout</button>
   </div>
+
 
 
 
