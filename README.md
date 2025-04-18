@@ -132,7 +132,7 @@ By using AWS SAM, I could define the infrastructure as code and deploy it with a
 
 ## Why Not Just Use a CMS?
 
-Because I’m not building Medium. MicroSocial isn't about monetized likes, infinite feeds, or analytics dashboards. It’s about control. I wanted users to have a single page, like in the old web, a chunk of HTML they could claim. You don’t need a CMS for that. You need Lambda, some permissions, and a little respect for the craft.
+Because I’m not building Medium. MicroSocial isn't about monetized likes, infinite feeds, or analytics dashboards. It’s about control. I wanted users to have a single page, like in the old web, a chunk of HTML they could claim. 
 
 	
 ## License
