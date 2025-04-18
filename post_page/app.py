@@ -87,10 +87,9 @@ def lambda_handler(event, context):
 <body>
   <div class="container">
     <h1>Nice Try :) </h1>
-    <p>No XSS here. Your submission contained tags like &lt;script&gt;, &lt;iframe&gt;, or &lt;embed&gt;.</p>
+    <p>This user tried to do XSS (or mistakenly posted a script tag). The submission contained tags like &lt;script&gt;, &lt;iframe&gt;, or &lt;embed&gt;.</p>
     <p>I appericate the gumption, but go do hacktheboxes or something instead. You don't want the FBI breathing down your neck, trust me, it sucks.</p>
-    <p class="ip">Your IP has been logged: <strong>{source_ip}</strong></p>
-    <p>Try again without forbidden tags. Two more strikes and you're banned for 24 hours!</p>
+    <p>Try again without forbidden tags.</p>
     <p><em>– Chris.</em></p>
   </div>
 </body>
