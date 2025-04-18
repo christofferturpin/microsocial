@@ -48,7 +48,7 @@ This project is an experiment in digital métis, cunning code that subverts expe
 
 Instead of trying to be the next Twitter killer (Twitter seems to be doing that itself), MicroSocial gives you one page. Just one. A single HTML file you fully control. No feeds. No likes. No ad-driven dopamine economy. It’s the opposite of infinite scroll; it’s a cul-de-sac. A weird, handmade webpage with room for bad poetry and blinking gifs.
 
-It’s not built for hype. It’s built for meaning. But don’t mistake that for fragility it’s weird and production-grade. Everything runs serverlessly on AWS: no VMs, no cold start nightmares, no single points of failure. You could onboard 10 users or 10,000 and the infra wouldn’t blink (and if it does we just do some DAX and SQS and call that a thing). 
+It’s not built for hype. It’s built for meaning. verything runs serverlessly on AWS, meaning no single points of failure. You could onboard 10 users or 10,000 and the infra wouldn’t blink (and if it does we just do some DAX and SQS and call that a feature). 
 
 It’s a little weird. A little overengineered. And entirely yours.
 
@@ -93,18 +93,18 @@ All logic is split across 3 core Lambdas:
 
 	Each edit triggers a CloudFront invalidation for the individual page — so users see changes instantly.
 	
---XSS Filtering: Custom in Lambda--
+--XSS Filtering: In Lambda & Via CSP --
 1. Frontline Defense: Content-Security-Policy (CSP)
 All user-generated pages (/u/*) are served through CloudFront with a strict CSP:
 
-default-src 'self';
-script-src 'none';
-style-src 'self' 'unsafe-inline';
-img-src 'self' data: https:;
-font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
-frame-src https://www.youtube.com https://www.youtube-nocookie.com;
-object-src 'none';
-base-uri 'none';
+		default-src 'self';
+		script-src 'none';
+		style-src 'self' 'unsafe-inline';
+		img-src 'self' data: https:;
+		font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
+		frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+		object-src 'none';
+		base-uri 'none';
 
 This blocks:
 
@@ -164,5 +164,5 @@ On submit, the /edit Lambda does a lightweight tag check — just enough to reje
 
 	
 ==License==
-MIT. Because information wants to be free.
+ MIT. Because information wants to be free.
 
