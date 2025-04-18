@@ -43,7 +43,6 @@ Installation
 Philosophy
 ===
 
-~Social media wants your attention, this place wants your thoughts.~
 
 This project is an experiment in digital métis, cunning code that subverts expectations (read my dissertation if you want to know more). Instead of scaling for virality, we scale for intentionality. Every piece of this app was built with the same spirit as a jailbreaking your Nintendo DS to run IRC, or using a smart fridge to SSH into a Minecraft server.
 
