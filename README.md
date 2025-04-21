@@ -34,11 +34,14 @@ Built on:
 
 1) Clone this repo.
 2) Deply via AWS SAM:
-```sam build
-    sam deploy --guided
-    run create_and_inject_sec_headers.py
-4) You'll need to make minor edits once you set up your DNS and cloudfront distro.
 ```
+sam build
+sam deploy --guided
+run create_and_inject_sec_headers.py
+```
+4) You'll need to make minor edits once you set up your DNS and cloudfront distro.
+5) Upload frontend assets to S3. 
+
 
 
 # Design Philosophy
