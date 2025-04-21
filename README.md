@@ -36,8 +36,9 @@ Built on:
 2) Deply via AWS SAM:
 ```sam build
     sam deploy --guided
-    run create_and_inject_sec_headers.py```
-4) You'll need to make minor edits once you set up your DNS and cloudfront distro. 
+    run create_and_inject_sec_headers.py
+4) You'll need to make minor edits once you set up your DNS and cloudfront distro.
+```
 
 
 # Design Philosophy
