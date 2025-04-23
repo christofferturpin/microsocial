@@ -93,4 +93,4 @@ cf.update_distribution(
     IfMatch=etag
 )
 
-print("✅ Update complete!")
+print(" Update complete!")
